@@ -25,9 +25,8 @@ git clone git://g.csail.mit.edu/6.824-golabs-2020 6.824
 我们在src/main/mrsequentii.go中为您提供了一个简单的顺序mapreduce实现。它运行映射，并在单个进程中每次减少一个映射。我们还为您提供了几个MapReduce应用程序:mrapps/wc中的单词计数。在mrapps/indexer.go中设置一个文本索引器。你可以运行顺序如下:
 
 ``` shell
-# 在mrapps/wc.go的 import "../mr" 修改为 import "mr"
 cd 6.824
-export GOPATH=$GOPATH:$PWD
+# export GOPATH=$GOPATH:$PWD not use GOPATH
 cd src/main
 go build -buildmode=plugin ../mrapps/wc.go
 go run mrsequential.go wc.so pg*.txt
@@ -145,3 +144,20 @@ sh ./test-mr.sh
     }
     ```
 
+- work的map部分使用worker.go中的ihash(key)函数对于给定的key选择reduce任务
+
+- 您可以从mrsequential.go中窃取一些代码，用于读取Map输入文件、排序Map和Reduce之间的中间键/值对，以及将Reduce输出存储在文件中。
+
+- master作为RPC服务，是并发的。不要忘记用锁处理共享数据。
+
+- 使用Go的race检测器，使用`go build -race` 和 `go run -race`。`test-mr.sh`有一条解释展示了如何在测试中启用race检测器
+
+- workers有时会需要等待。例如，reduce人物不能开始直到最后一个map任务完成。一种可能是workers定期向master请求任务，请求间隔中使用`time.Sleep()`休眠.另一种可能是master相关的RPC处理程序有一个等待的循环，可以是`time.Sleep()`或者`sync.cond`.Go在自己的线程中为每一个RPC运行处理程序，所以一个处理程序等待不会阻止master运行其他PRCs。
+
+- master无法可靠地分辨崩溃的workers，存活但因一些原因停滞的wokers和运行中但处理速度很慢导致无法使用的workers。最好的做法是master等待一些时间，然后放弃，把任务重新分配给另一个worker。在这个lab中，master等待十秒钟后可以假设worker已经崩溃（当然，可能没有崩溃）。
+
+- 要测试崩溃恢复，可以使用mrapps/crash.go应用程序插件，它随机地存在Map和Reduce函数中。
+
+- 为了确保没有在出现崩溃的情况下观察到部分写入的文件，MapReduce paper提到了使用临时文件并在写入完成后对其进行原子重命名的技巧。可以使用ioutil.TempFile创建临时文件，使用os.Rename以原子方式重命名。
+
+- test-mr.sh运行子目录mr-tmp中的所有进程，如果除了问题，你想查看中间文件或者输出文件，请查看那里。
