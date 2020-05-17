@@ -161,3 +161,7 @@ sh ./test-mr.sh
 - 为了确保没有在出现崩溃的情况下观察到部分写入的文件，MapReduce paper提到了使用临时文件并在写入完成后对其进行原子重命名的技巧。可以使用ioutil.TempFile创建临时文件，使用os.Rename以原子方式重命名。
 
 - test-mr.sh运行子目录mr-tmp中的所有进程，如果除了问题，你想查看中间文件或者输出文件，请查看那里。
+
+# 完成
+
+ 运行 test-mr.sh，并通过所有tests
