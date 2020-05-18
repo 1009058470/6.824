@@ -10,6 +10,9 @@ import "net/http"
 type Master struct {
 	// Your definitions here.
 
+	// map job status
+	// reduce job status
+
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -46,11 +49,11 @@ func (m *Master) server() {
 // if the entire job has finished.
 //
 func (m *Master) Done() bool {
-	ret := true
+	ret := false
 
 	// Your code here.
 
-
+	// check point
 	return ret
 }
 
@@ -61,8 +64,11 @@ func (m *Master) Done() bool {
 //
 func MakeMaster(files []string, nReduce int) *Master {
 	m := Master{}
+	// TODO crash  
+	// files And nReduce equal
 
 	// Your code here.
+	m.FileList = files
 
 
 	m.server()
