@@ -9,9 +9,15 @@
 ## TODO
 - [x]  Lab-1 prepare tasking.md
 - [ ]  Lab-1 paper
+    - [x] 简介/编程模型
+    - [x] 实现
+    - [ ] 改进
+    - [ ] 性能
+    - [ ] 经验
+    - [ ] 总结
+    
 - [ ]  Lab-1 vedio
 - [ ]  Lab-1 coding
-
 
 - [ ] MIT subjects https://zhuanlan.zhihu.com/p/112763953
 - [ ] 6.828: Operating System Engineering

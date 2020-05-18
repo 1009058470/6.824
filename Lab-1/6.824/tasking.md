@@ -116,15 +116,15 @@ sh ./test-mr.sh
 - 当job完全完成时，workers应该退出.实现这一点的一种简单方法是使用call()的返回值,如果worker没有联系主进程，它可以假设主进程已经退出，因为作业已经完成，所以worker也可以终止。根据您的设计，您可能还会发现有一个“请退出”伪任务是很有帮助的，master可以将这个伪任务交给worker。
 
 提示:
-- 开始的一种方法是修改mr/worker.go的Worker()，以便向master发送请求任务的RPC。然后修改master，以响应一个尚未启动的映射任务的文件名。然后修改worker以读取该文件并调用application Map函数，如mrsequential.go中所示。
+- 开始的一种方法是修改mr/worker.go的Worker()，以便向master发送请求任务的RPC。然后修改master，以响应一个尚未启动的map任务的文件名。然后修改worker以读取该文件并调用application Map函数，如mrsequential.go中所示。
 
-- 应用程序映射和Reduce函数在运行时使用Go plugin包从名称以.so结尾的文件加载。
+- 应用程序Map和Reduce函数在运行时使用Go plugin包从名称以.so结尾的文件加载。
 
 - 如果你改变了mr/目录中的任何东西，你可能需要重新构建你使用的MapReduce插件，比如go build -buildmode=plugin ../mrapps/wc.go
 
 - 这个实验室依赖于共享文件系统的workers。当所有workers都在同一台机器上运行时，这是很简单的，但是如果workers在不同的机器上运行，则需要像GFS这样的全局文件系统。
 
-- 中间文件的合理命名约定是mr-X-Y，其中X是映射任务编号，Y是reduce任务编号。
+- 中间文件的合理命名约定是mr-X-Y，其中X是map任务编号，Y是reduce任务编号。
 
 - worker的map任务代码需要一种方法来将中间键/值对存储在文件中，这种方法可以在reduce任务期间正确地读回。一种可能是使用Go的编码/json包。要将键/值对写入JSON文件:
     ```golang
