@@ -20,7 +20,6 @@
 获取6.824实验软件:
 ``` shell
 git clone git://g.csail.mit.edu/6.824-golabs-2020 6.824
-
 ```
 我们在src/main/mrsequentii.go中为您提供了一个简单的顺序mapreduce实现。它运行映射，并在单个进程中每次减少一个映射。我们还为您提供了几个MapReduce应用程序:mrapps/wc中的单词计数。在mrapps/indexer.go中设置一个文本索引器。你可以运行顺序如下:
 
